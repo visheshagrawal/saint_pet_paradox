@@ -1,5 +1,4 @@
 <!DOCTYPE html><html><head>
-<title>DDMLAB</title>
 <style>
 div {
   width: 750px;
@@ -18,7 +17,7 @@ div {
   color: red;
 }
   button{
-    /*margin-top: 20px;*/
+    margin-top: 50px;
     border-radius: 25px;
     margin-left:400px;
     /*width: 250px;*/
@@ -47,6 +46,24 @@ div {
   /*padding: 0 40px;*/
   background: limegreen;
   border: none;
+  display: none;
+
+  }
+
+  button-3{
+    margin-top: 30px;
+    margin-bottom: 10px;
+    border-radius: 25px;
+    margin-left:300px;
+    width: 150px;
+    height: 50px;
+    float: left;
+  line-height: 60px;
+  font-weight: bold;
+  /*padding: 0 40px;*/
+  background: grey;
+  border: none;
+  display: none;
 
   }
   
@@ -54,12 +71,12 @@ div {
 </head>
 <body bgcolor="skyblue">
   <div>
-    <H1 font="Stencil">PROBLEM</H1>
-    <br>
+    <center><h1 style="color:midnightblue;">SAMPLING-PHASE</H1></center>
+    
 
-A casino offers a game in which you have to toss a coin by pressing the button. In case a heads comes you will be still in the game , but if a tails comes your game will be over ,you will be shown your amount and if you want to play again you can press the reset button. You can play the game as many times you want.
-
-<br><br>
+<left>In the sampling phase, you can toss the coin below (the red button) as many times as you desire to find out the earnings from the game. Getting a head will increase your earnings and getting a tale will end the game. In the sampling phase, each outcome you get in the coin toss will not affect your final earnings from the game. In each game, you start with an initial amount of INR 2. Once your game is over, you may play the game again upon clicking the green reset button. Once you are satisfied with your game play, you may play for real by clicking the “Play for real” button (you need to toss the coin at least once before you can play the game for real). Once you click the “Play for real” button, you will be taken to the final-choice phase where you will be asked to play this game for real. 
+</left>
+<br><br><br><br>
 <!-- <button type="button" onclick="alert('You pressed the button!')">Click me!</button> -->
 <!-- <div class="padding">
   <center><b><font size="6">Toss the Coin</font></b></center>
@@ -104,13 +121,80 @@ if ($conn->query($sql) === TRUE) {
 
  
 <script>
+function roundTo(n, digits) {
+    var negative = false;
+    if (digits === undefined) {
+        digits = 0;
+    }
+        if( n < 0) {
+        negative = true;
+      n = n * -1;
+    }
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    n = (Math.round(n) / multiplicator).toFixed(2);
+    if( negative ) {    
+        n = (n * -1).toFixed(2);
+    }
+    return n;
+}
+function toggle(){
+  var myBtn = document.getElementById('myBtn');
+
+    // get the current value of the clock's display property
+    var displaySetting = myBtn.style.display;
+
+    // also get the clock button, so we can change what it says
+    //var clockButton = document.getElementById('clockButton');
+
+    // now toggle the clock and the button text, depending on current state
+    if (displaySetting == 'block') {
+      // clock is visible. hide it
+      myBtn.style.display = 'none';
+      // change button text
+      //clockButton.innerHTML = 'Show clock';
+    }
+    else {
+      // clock is hidden. show it
+      myBtn.style.display = 'block';
+      // change button text
+      //clockButton.innerHTML = 'Hide clock';
+    }
+  }
+    function toggleSubmit(){
+ var submitBtn = document.getElementById('submitBtn');
+
+    // get the current value of the clock's display property
+    var displaySettingSubmit = submitBtn.style.display;
+
+    // also get the clock button, so we can change what it says
+    //var clockButton = document.getElementById('clockButton');
+
+    // now toggle the clock and the button text, depending on current state
+    if (displaySettingSubmit == 'block') {
+      // clock is visible. hide it
+      submitBtn.style.display = 'none';
+      // change button text
+      //clockButton.innerHTML = 'Show clock';
+    }
+    else {
+      // clock is hidden. show it
+      submitBtn.style.display = 'block';
+      // change button text
+      //clockButton.innerHTML = 'Hide clock';
+    }
+  }
+  //document.getElementById("myBtn").disabled = true;
 var value=2;
 var set = 2;
 var prob=0;
+var rand =0;
+var flagforreset=false;
+var flagforsubmit=false;
 // 1. Create the button
 var button = document.createElement("button");
 // var button-2 = document.createElement("button2");
-// button.innerHTML = "Toss the coin";
+button.innerHTML = "Click to toss the coin";
 
 // 2. Append somewhere
 var body = document.getElementsByTagName("body")[0];
@@ -125,38 +209,51 @@ button.addEventListener ("click", mathprob);
   //0. Random function
 
   function mathprob(){
-
-      if (Math.random()<=0.5){
-        value=2*value;
+    if(flagforsubmit==true){
+          flagforsubmit=false;
+          toggleSubmit();
+        }
+    //toggleSubmit();
+rand=Math.random();
+      //if (Math.random()<=0.5){
+        if(rand<=0.5){
+value=2*value;
+rand=roundTo(rand,4);
         document.getElementById("demo").innerHTML = "Heads: Your money just got doubled!Your total money now is"+" Rupees "+value;
-       }
+document.getElementById('myBtn').style.display='none';
+      }
       else{
+rand=roundTo(rand,4);
         document.getElementById("demo").innerHTML = "Tails: Game over!You win Rupees "+value;
-        //value=set;
         //window.location.href="vishrefreshexp.php";
-        var timer = setTimeout(function(){window.location="vishrefreshexp.php?win="+value}, 400);
-        //value=set;
+document.getElementById('myBtn').style.display='block';
+button.style.display='none';
+        if(flagforsubmit==false){
+          flagforsubmit=true;
+          toggleSubmit();
+        }
+        //var timer = setTimeout(function(){window.location="vishrefreshexp.php?win="+value}, 400);
+ myWindow = window.open("vishrefreshexp.php?win="+value  + "&random=" + rand);
+        myWindow.close();
+        value=set;
       }
   }
 
    function saysomething(){
       document.getElementById("demo").innerHTML = "";
       value=2;
+document.getElementById('myBtn').style.display='none';
+//toggle();
+if(flagforsubmit==true){
+          flagforsubmit=false;
+          toggleSubmit();
+        }
+button.style.display='block';
       
   }
 
-function heelo(){
-          <?php
-    echo "HEllo";
-        ?>
-}
-
-function test()
-
-{
-
-alert("<?php echo "Testing"; ?>");
-
+function goNext(){
+  window.location.assign("vishAmountExp.php");
 }
 
 
@@ -166,22 +263,25 @@ alert("<?php echo "Testing"; ?>");
 <b><p id="demo"></p></b>
 
 <form>
-  <button-2 type="button-2" onclick="saysomething()">Reset</button-2> 
+  <button-2 type="button-2" id="myBtn" onclick="saysomething()">Reset</button-2>
+  <br><br><br>
+  <button-3 type="button-3" id="submitBtn" onclick="goNext()">Play for real</button-3>
+  <!-- <button onclick="toggle()">Ns</button> --> 
 </form>
 
 <br><br><br><br>
-<p>If you are ready to play this game for real click the next button.</p>
+<!-- <p>If you are ready to play this game for real click the next button.</p> -->
 
 
-<form method="POST" action='vishAmountExp.php'>
+<!-- <form method="POST" action='vishAmountExp.php'>
 
                                 <br>
-                                  <input type="submit" value="Next " name="commit" >               
+                                  <input type="submit" value="Play for real " name="commit" >               
 
-                </form>
+                </form> -->
 
 </div>
-
+</center>
 </body>
 </html>
 
